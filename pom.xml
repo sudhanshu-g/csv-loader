@@ -5,11 +5,20 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>CSVLoader</name>
   <description>A util to load csv file data as list or stream of objects</description>
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+</properties>
   <dependencies>
   	<dependency>
   		<groupId>junit</groupId>
   		<artifactId>junit</artifactId>
   		<version>4.12</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.projectlombok</groupId>
+  		<artifactId>lombok</artifactId>
+  		<version>1.16.20</version>
   	</dependency>
   </dependencies>
 </project>

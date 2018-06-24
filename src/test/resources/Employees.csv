@@ -1,3 +1,3 @@
-EmployeeId,FirstName,LastName
-11530440,Sudhanshu,Gupta
-14587247,Shivam,Garg
+EmployeeId,FirstName,LastName,CTC (LPA),Permanent,Grade,Last Seen,Experience
+11530440,Sudhanshu,Gupta,19.5,TRUE,A,24/06/2018 19:24,8
+14587247,Shivam,Garg,12.82,FALSE,O,22/05/2018 09:15,5

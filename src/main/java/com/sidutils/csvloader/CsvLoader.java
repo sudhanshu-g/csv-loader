@@ -1,10 +1,14 @@
 package com.sidutils.csvloader;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Proxy;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -12,7 +16,10 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
-public class CsvLoader<T> {
+import lombok.Getter;
+
+@Getter
+public class CsvLoader {
 
 	private String delimiter = ",";
 
@@ -26,10 +33,10 @@ public class CsvLoader<T> {
 		private CsvLoader instance;
 
 		public Builder() {
-			instance = new CsvLoader<>();
+			instance = new CsvLoader();
 		}
 
-		public Builder setDelimeter(String regex) {
+		public Builder delimeter(String regex) {
 			instance.delimiter = regex;
 			return this;
 		}
@@ -44,10 +51,18 @@ public class CsvLoader<T> {
 		}
 	}
 
-	public List<T> loadCsv(String fileName, Class<T> type) throws FileNotFoundException {
+	public <T> List<T> loadCsv(String fileName, Class<T> type) throws FileNotFoundException {
 		File file = new File(fileName);
+		return loadCsv(new FileInputStream(file),type);
+	}
+	
+	public <T> List<T> loadCsv(InputStream in, Class<T> type) throws FileNotFoundException {
+		
 		List<T> list = new ArrayList<>();
-		try (Scanner sc = new Scanner(new FileInputStream(file))) {
+		try (Scanner sc = new Scanner(in)) {
+			if(skipHeader && sc.hasNextLine()) {
+				sc.nextLine();
+			}
 			while (sc.hasNextLine()) {
 				String line = sc.nextLine();
 				String[] row = line.split(delimiter);
@@ -58,10 +73,20 @@ public class CsvLoader<T> {
 		}
 		return list;
 	}
+	
+	public <T> Stream<T> loadCsvStream(InputStream in, Class<T> type) throws IOException {
+		Stream<String> lines = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8"))).lines();
+		return loadStream(lines, type);
+	}
 
-	public Stream<T> loadCsvStream(String fileName, Class<T> type) throws IOException {
-		Stream<String> in = Files.lines(Paths.get(fileName));
-		return in.skip(0).map(line -> {
+	public <T> Stream<T> loadCsvStream(String fileName, Class<T> type) throws IOException {
+		Stream<String> lines = Files.lines(Paths.get(fileName));
+		return loadStream(lines, type);
+	}
+	
+	private <T> Stream<T> loadStream(Stream<String> lines, Class<T> type) {
+		int skipLines = (skipHeader)?1:0;
+		return lines.skip(skipLines).map(line -> {
 			String[] row = line.split(delimiter);
 			return (T) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[] { type },
 					new CsvLoaderProxy(row));
