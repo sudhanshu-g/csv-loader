@@ -22,7 +22,7 @@ import lombok.Getter;
  * Tool to load data from csv file into List/Stream of dynamically generated objects.
  * Follow the below steps to use it.
  * <ol>
- * 	<li>Create an interfae with getter methods mapped to fields in the csv file with {@link @FieldIndex(<field's column number in the file 0 based>)}</li>
+ * 	<li>Create an interfae with getter methods mapped to fields in the csv file with @FieldIndex(&lt;field's column number in the file 0 based&gt;)</li>
  * 	<li>Initialize an object of CsvLoader using its Builder</li>
  * 	<li>Call one of the overridden methods to get the List/Stream of your interface type</li>
  * </ol>
@@ -88,7 +88,7 @@ public class CsvLoader {
 	 * @param type The interface class
 	 * @see com.sidutils.csvloader.CsvLoader
 	 * @return List of dynamically generated objects from the interface supplied
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException if the supplied file is not available/accessible
 	 */
 	public <T> List<T> loadCsv(String fileName, Class<T> type) throws FileNotFoundException {
 		File file = new File(fileName);
@@ -101,7 +101,7 @@ public class CsvLoader {
 	 * @param type The interface class
 	 * @see com.sidutils.csvloader.CsvLoader
 	 * @return List of dynamically generated objects from the interface supplied
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException if the supplied file is not available/accessible
 	 */
 	public <T> List<T> loadCsv(InputStream in, Class<T> type) throws FileNotFoundException {
 		
@@ -127,7 +127,7 @@ public class CsvLoader {
 	 * @param type The interface class
 	 * @see com.sidutils.csvloader.CsvLoader
 	 * @return Stream of dynamically generated objects from the interface supplied
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException if the supplied file is not available/accessible
 	 */
 	public <T> Stream<T> loadCsvStream(InputStream in, Class<T> type) throws IOException {
 		Stream<String> lines = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8"))).lines();
@@ -140,7 +140,7 @@ public class CsvLoader {
 	 * @param type The interface class
 	 * @see com.sidutils.csvloader.CsvLoader
 	 * @return Stream of dynamically generated objects from the interface supplied
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException if the supplied file is not available/accessible
 	 */
 	public <T> Stream<T> loadCsvStream(String fileName, Class<T> type) throws IOException {
 		Stream<String> lines = Files.lines(Paths.get(fileName));
